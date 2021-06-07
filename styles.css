@@ -1,0 +1,12 @@
+h1 {
+	font-size: 30px;
+	text-align: center;
+}
+canvas {
+	display: block;
+	background: #282925;
+}
+.demo {
+	display: flex;
+	justify-content: center;
+}

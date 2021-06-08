@@ -1,6 +1,6 @@
 let shapes = {
 	rect: 1,
-	triangle: 2,
+	line: 2,
 	circle: 3
 };
 
@@ -16,7 +16,7 @@ let Rect = function(x, y, width, height){
 	
 	this.draw = function(g, body){
 		g.drawRect(this.x, this.y, this.width, this.height, body.fillColor, body.strokeColor);
-		g.drawText("m = " + body.m, body.shape.x+ 2, body.shape.y + 15, 15, "left");
+		if(isFinite(body.m))g.drawText("m = " + body.m, body.shape.x+ 2, body.shape.y + 15, 15, "left");
 	};
 	
 	this.checkPointIn = function(x, y){
@@ -41,6 +41,15 @@ let Circle = function(x, y, r){
 	};
 };
 
+let Line = function(x, y, x2, y2){
+	
+	this.x = x;
+	this.y = y;
+	this.x2 = x2;
+	this.y2 = y2;
+	
+};
+
 let Body = function(shape, m = 10){
 	this.shape = shape;
 	
@@ -55,6 +64,7 @@ let Body = function(shape, m = 10){
 	
 	this.tick = function(){
 		this.friction();
+		this.gravity();
 		let [vx, vy] = this.vel;
 		shape.x += vx;
 		shape.y += vy;
@@ -75,7 +85,8 @@ let Body = function(shape, m = 10){
 	}
 	
 	this.mouseMoved = function(dist, vect){
-		this.applyForce(vecMultByNum(vect, dist < 350 ? dist : 350)); 
+		if(!isFinite(this.m)) return;
+		this.applyForce(vecMultByNum(vect, dist)); 
 	};
 	
 	this.friction = function(){
@@ -87,4 +98,16 @@ let Body = function(shape, m = 10){
 		if(Math.abs(this.vel[0]) < 0.1) this.vel[0] = 0;
 		if(Math.abs(this.vel[1]) < 0.1) this.vel[1] = 0;
 	}
+	this.gravity = function(){
+		let onGround = false;
+		//console.log(this.collided.size)
+		/*this.collided.forEach(function(item){
+			if(this.collided.size > 0 && item.shape.y > this.shape.y) onGround = true;
+		});*/
+		for(let b of this.collided){
+			if(b.shape.y > this.shape.y) onGround = true;
+		}
+		//if(this.m === 1550) console.log(this.shape.y);
+		if(!onGround && isFinite(this.m))this.vel = (vecPlusVec(this.vel, [0, 0.98]));
+	};
 };

@@ -54,6 +54,9 @@ let mouse = new function(){
 	
 	this.connectet = false;
 	
+	this.lineLength = 0;
+	const maxLineLength = 350;
+	
 	this.down = function(e){
 		this.pressed = true;
 		this.clickPoint = this.pos;
@@ -64,13 +67,21 @@ let mouse = new function(){
 		if(this.connected){
 			let [x, y] = this.clickPoint;
 			let [x2, y2] = this.pos;
-			this.connected.mouseMoved(distance(x, y, x2, y2), toUnitVector(x2, y2, x, y));
-			this.connected = false;
+			if(x !== x2 && y !== y2){
+				this.connected.mouseMoved(e.which === 2 ? this.lineLength * this.connected.m / 10: this.lineLength, toUnitVector(x2, y2, x, y));
+				this.connected = false;
+			}
 		}
 		this.clickPoint = false;
 	};
 	
 	this.tick = function(f){
+		if(this.pressed ){
+			let [x, y] = this.clickPoint;
+			let [x2, y2] = this.pos;
+			let dist = distance(x, y, x2, y2);
+			this.lineLength = dist < maxLineLength ? dist : maxLineLength;
+		}
 		f(); 
 	};
 	this.draw = function(g){
@@ -80,6 +91,7 @@ let mouse = new function(){
 			g.drawLine(x, y, x2, y2);
 			g.drawCircle(x, y, 5, this.connected ? "green" : "blue", false);
 			g.drawCircle(x2, y2, 5, "blue", false);
+			g.drawText(Math.round(this.lineLength / maxLineLength * 100) + "%", x2, y2 - 15, 20, "center");
 		}
 	};
 	this.setPos = function(canvas, e){

@@ -50,9 +50,7 @@ function pointInCircle(x, y, circle){
 
 function dotProduct(x1, y1, x2, y2){
 	return (x1 * x2 + y1 * y2);
-}/*
-function dotProduct(vec1, vec2){
-	let [x1, y1] = vec1;
-	let [x2, y2] = vec2;
-	return dotProduct(x1, y1, x2, y2);
-}*/
+}
+function rand(a, b) {
+	return Math.round(a + Math.random() * (b - a));
+}

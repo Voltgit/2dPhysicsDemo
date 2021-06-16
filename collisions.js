@@ -1,5 +1,5 @@
 
-let collision = function(body1, body2){
+let collision = function(body1, body2, g){
 	let shape1 = body1.shape;
 	let shape2 = body2.shape;
 	
@@ -87,6 +87,44 @@ let collision = function(body1, body2){
 			discollid();
 		}
 		
+		
+	}
+	
+	if(shape1.type == shapes.rect && shape2.type == shapes.rect){
+		
+		let {x: x1, y: y1, width: w1, height: h1, centerX: cx1, centerY: cy1} = shape1;
+		let {x: x2, y: y2, width: w2, height: h2, centerX: cx2, centerY: cy2} = shape2;
+		
+		
+		if(x1 + w1 >= x2 &&
+		   x1 <= x2 + w2 &&
+		   y1 + h1 >= y2 &&
+		   y1 <= y2 + h2){
+			   
+			   let nx = cx1;
+			   let ny = cy1;
+				nx = (cx1 < x2) ? x2 : (cx1 > x2 + w2) ? x2 + w2 : cx1;
+				ny = (cy1 < y2) ? y2 : (cy1 > y2 + h2) ? y2 + h2 : cy1;
+				
+			   let n = toUnitVector(cx1, cy1, nx, ny);
+			   
+			   let relVel = vecMinusVec(body2.vel, body1.vel);
+			   
+			   let velAlongNormal = dotProduct(relVel[0], relVel[1], n[0], n[1]);
+			   
+			   if(!(velAlongNormal > 0)){
+				let j = -(1 + 0.8) * velAlongNormal;
+				j /= (1 / body1.m) + (1 / body2.m);
+				
+				let impulse = vecMultByNum(n, j);
+				body1.vel = vecMinusVec(body1.vel, vecMultByNum(impulse, (1 / body1.m)));
+				body2.vel = vecPlusVec(body2.vel,  vecMultByNum(impulse, (1 / body2.m)));
+				collid();
+			}
+			   
+		}else {
+			discollid();
+		}
 		
 	}
 	

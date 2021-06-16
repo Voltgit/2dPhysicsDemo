@@ -2,6 +2,13 @@ h1 {
 	font-size: 30px;
 	text-align: center;
 }
+h2 {
+	font-size: 30px;
+	text-align: center;
+}
+h3 {
+	font-size: 20px;
+}
 canvas {
 	display: block;
 	background: #282925;
@@ -9,4 +16,41 @@ canvas {
 .demo {
 	display: flex;
 	justify-content: center;
+}
+.menu {
+	overflow: auto;
+	background-color: #f6f8fa;
+	border: 0.5px solid #ddd;
+	border-radius: 3px;
+	max-height: 600px;
+	min-width: 200px;
+	padding-left: 15px;
+	padding-right: 15px;
+	font-size: 20px;
+	text-align: left;
+}
+.tools{
+	overflow: auto;
+	padding: 16px;
+	background-color: #f6f8ff;
+	border: 1.5px solid #ddd;
+	border-radius: 3px;
+	min-width: 200px;
+}
+.button {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 10px 30px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+}
+.button:hover {
+	background-color: #4CA150;
+}
+.button:active {
+    box-shadow: inset -1px -1px 1px rgba(255, 255, 255, .6),
+                inset 1px 1px 1px rgba(0, 0, 0, .6);
 }

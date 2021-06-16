@@ -56,6 +56,7 @@ let mouse = new function(){
 	
 	this.lineLength = 0;
 	const maxLineLength = 350;
+	this.clearConnected = false;
 	
 	this.down = function(e){
 		this.pressed = true;
@@ -76,13 +77,13 @@ let mouse = new function(){
 	};
 	
 	this.tick = function(f){
-		if(this.pressed ){
+		f(); 
+		if(this.pressed){
 			let [x, y] = this.clickPoint;
 			let [x2, y2] = this.pos;
 			let dist = distance(x, y, x2, y2);
 			this.lineLength = dist < maxLineLength ? dist : maxLineLength;
 		}
-		f(); 
 	};
 	this.draw = function(g){
 		if(this.clickPoint){
@@ -98,5 +99,6 @@ let mouse = new function(){
 		let rect = canvas.getBoundingClientRect();
 		this.pos = [e.clientX - rect.left,
 					e.clientY - rect.top];
+					
 	};
 };

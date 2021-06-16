@@ -11,8 +11,17 @@ let Rect = function(x, y, width, height){
 	this.height = height;
 	this.type = shapes.rect;
 	
-	this.centerX = this.x - this.width / 2;
-	this.centerY = this.y - this.height / 2;
+	
+	Object.defineProperty(this, "centerX", {
+		get() {
+			return this.x + this.width / 2;
+		}
+	});
+	Object.defineProperty(this, "centerY", {
+		get() {
+			return this.y + this.height / 2;
+		}
+	});
 	
 	this.draw = function(g, body){
 		g.drawRect(this.x, this.y, this.width, this.height, body.fillColor, body.strokeColor);
@@ -53,6 +62,8 @@ let Line = function(x, y, x2, y2){
 let Body = function(shape, m = 10){
 	this.shape = shape;
 	
+	this.isStatic = isFinite(m) ? false : true;
+	
 	this.collided = new Set();
 	
 	this.fillColor = "#00b7ff";
@@ -63,8 +74,9 @@ let Body = function(shape, m = 10){
 	this.m = m;
 	
 	this.tick = function(){
-		this.friction();
+		if(this.isStatic) return;
 		this.gravity();
+		this.friction();
 		let [vx, vy] = this.vel;
 		shape.x += vx;
 		shape.y += vy;
@@ -100,14 +112,9 @@ let Body = function(shape, m = 10){
 	}
 	this.gravity = function(){
 		let onGround = false;
-		//console.log(this.collided.size)
-		/*this.collided.forEach(function(item){
-			if(this.collided.size > 0 && item.shape.y > this.shape.y) onGround = true;
-		});*/
 		for(let b of this.collided){
 			if(b.shape.y > this.shape.y) onGround = true;
 		}
-		//if(this.m === 1550) console.log(this.shape.y);
 		if(!onGround && isFinite(this.m))this.vel = (vecPlusVec(this.vel, [0, 0.98]));
 	};
 };
